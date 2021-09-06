@@ -224,7 +224,7 @@ boxplot(Data)
 ```
 
 <font color=red size=5>**自定义函数不明白???????**</font>
-```{r}
+```{r warning=FALSE}
 Statistic_T <- function(Number_Sample){
     X = rnorm(Number_Sample); 
     S_T = (X-mean(X))/sd(X);
