@@ -1,0 +1,295 @@
+---
+title: "R语言练习"
+author: "huzhibin"
+date: "2021/9/6"
+output: 
+  html_document: 
+    css: D:/Program Files/Typora/resources/style/themes/github.css
+---
+### 赋值
+```{r}
+X=0
+```
+### 循环语句
+```{r}
+ for(k in 1:10)
+   {X[k]=k^2+1; print(X);}
+```
+```{r}
+X=0
+```
+中间没有的数会补上NA
+```{r}
+for(k in c(1,2,3,5)){X[k]=k^2+1; print(X);}  
+```
+### rbinom(n, size, prob)
+生成n个符合B~(size,prob)的数，二项分布，size是试验次数，prob是成功的概率
+```{r}
+x=rbinom(10,10,0.3); 
+print(x); 
+print(sum(x))
+```
+### dbinom(n,size,prob)
+给出n点的概率密度
+
+### cbind(a,b)
+以列的方式链接(column)
+```{r}
+x=0:10; 
+y=dbinom(x,10,0.5); 
+print(cbind(x,y))
+```
+### rnorm(n,a,b)
+生成n个正态随机数，均值为a，标准差为b
+```{r}
+ x=rnorm(20,1,0.5); print(x)
+```
+### rexp(n,a)
+指数分布随机数，生成n个参数值$\lambda$为a的随机数，表观来看$\lambda$越小，数值越大。
+$$f(x) = λ {e}^{- λ x}$$
+```{r}
+y = rexp(20,1); print(y)
+```
+
+### 一个维度的绘图
+c(x,y)，把x，y连接在了一起
+```{r}
+ z = c(x,y);   plot(z)
+```
+
+### seq(from=a,to=b,length=n)
+从a到b的序列，输出长度为n
+
+### seq(from=a,to=b,by=n)
+从a到b的序列，步长为n
+```{r}
+seq(1,10,length=5)
+```
+```{r}
+seq(1,10,by=5)
+```
+不加by/length默认为by
+```{r}
+seq(1,10,5)
+```
+```{r}
+Number_Box = 10;
+ Bound = seq(from=0,to=1,length=Number_Box);
+ SampleX = runif(500);
+ Frequence = 0;
+ for (k in 1:Number_Box){
+     Index=(SampleX>Bound[k])*(SampleX<Bound[k+1]);
+     #随机数在而二者中间
+     Frequence[k]=sum(Index);}
+```
+
+### barplot绘制条形图
+```{r}
+barplot(Frequence,xlab="Groups",ylab="Frequence",main="BarPlot")
+```
+
+### hist
+hist画条形图，只给一个参数时，默认是频数分布表
+```{r}
+hist(SampleX)
+```
+
+### matplot绘图
+按照列绘图，pch是点的类型（小于16的整数或者字符），type是图的类型
+
+- ‘p’：仅仅绘制各个散点；
+- ‘l’：各个散点构成的连线；
+- ‘s’：各个散点构成的阶梯线；
+- ‘b’：直线连接各个散点；
+- ‘o’ ：直线连接并覆盖各个散点；
+- ‘h’ ：绘制点到坐标轴的垂直线；
+
+### apply
+apply函数经常用来计算矩阵中行或列的均值、和值的函数
+
+apply(b,1,sum)
+
+第一个参数是指要参与计算的矩阵；
+
+第二个参数是指按行计算还是按列计算，1——表示按行计算，2——按列计算；
+
+第三个参数是指具体的运算参数。
+```{r}
+X = seq(0, 2*pi, length = 30);
+Y = sin(X);   Z = cos(X);
+Data = cbind (Y,Z);
+matplot (X, Data, pch = 10, type = 'o');
+YZ_Min = apply(Data,1,min)
+```
+
+### plot画图
+### sort排序
+```{r}
+plot(sort(YZ_Min));
+plot(X,YZ_Min);
+lines(X,YZ_Min)
+```
+
+### combn(x,m)
+组合数。
+给出所有组合x：包含用于组合的元素的向量
+m：选择元素的数量
+```{r}
+Sample = combn(1:5,3);
+Sample
+```
+
+### colSums
+按列求和，可以直接求和布尔值
+```{r}
+Number_Waster = colSums(Sample <= 2);
+Number_Waster
+```
+```{r}
+Selection = (Number_Waster == 1);
+Selection
+```
+```{r}
+Probability = sum(Selection)/choose(5,3);
+Probability
+```
+
+### choose
+choose(n,k)，给出$C^k_n$的值
+```{r}
+choose(5,2)
+```
+
+### sample抽样
+sample(x,size,replace)
+
+replace=T，有放回，默认无放回
+### 省略参数必须位置对应，带参数可以颠倒位置
+```{r}
+sample(size=20,replace=T,x=1:9)
+```
+```{r}
+sample(1:9,20,replace=T)
+```
+
+### matrix生成矩阵
+matrix(x,nrow=2,ncol=3)
+```{r}
+matrix(1:10,2,5)
+```
+
+```{r}
+SampleX = 1:5 <= 2;
+Number_Repeat = 100;
+Sample_Random = sample(SampleX,Number_Repeat*3,replace=TRUE);
+SampleY = matrix(Sample_Random,nrow=Number_Repeat,ncol=3);
+for(k in 1:Number_Repeat){SampleY[k,] = sample(SampleX,3)};
+Number_Waster = rowSums(SampleY);
+Selection = (Number_Waster == 1);
+Frequency = sum(Selection)/Number_Repeat;
+print(Frequency-Probability)
+```
+
+### mean均值
+
+### sd标准差
+```{r}
+X = rnorm(100,0,1);  hist(X);
+X2 = X^2;  hist(X2);
+E_X2 = mean(X2); D_X2 = sd(X2);
+Y = rexp(1000,3);  hist(Y);
+E_X2 = mean(X2); D_X2 = sd(X2)
+```
+
+### lines连线
+hist加入freq=F可以把纵轴变成密度。
+```{r}
+X = rnorm(1000);
+Y = X^2;
+hist(Y,20,freq = F);
+lines(density(Y))
+```
+
+### boxplot
+boxplot画箱线图
+```{r}
+Norm_0_1 = rnorm(200,0,1);
+Norm_0_2 = rnorm(200,0,2);
+Norm_1_2 = rnorm(200,1,2); 
+Trans_1_2 = (Norm_1_2-1)/2; 
+Trans_10_2 = (Norm_1_2-10)/2; 
+Trans_1_5 = (Norm_1_2-1)/5;
+Data= cbind(Norm_0_1,Norm_0_2,Norm_1_2,Trans_1_2,Trans_10_2,Trans_1_5);
+boxplot(Data)
+```
+
+<font color=red size=5>**自定义函数不明白???????**</font>
+```{r}
+Statistic_T <- function(Number_Sample){
+    X = rnorm(Number_Sample); 
+    S_T = (X-mean(X))/sd(X);
+    return(S_T)}
+Number_Sample = 100;
+Number_Repeat = 200;
+Vector_T = as.numeric(vector(length=Number_Repeat))
+for (k in 1:Number_Repeat){
+    Vector_T[k]= Statistic_T(Number_Sample)};
+hist(Vector_T,freq=F);
+lines(density(Vector_T))
+
+```
+
+### vector
+vector(length=n)生成长度为n的向量，内容全为FALSE
+
+```{r}
+vector(length=20)
+```
+### as.numeric
+转化为数字
+```{r}
+as.numeric(vector(length=20))
+```
+
+```{r}
+Statistic_T <- function(Number_Sample){
+    X = rnorm(Number_Sample); 
+    S_T = (X-mean(X))/sd(X);
+    return(S_T)}
+Statistic_T(3)
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
