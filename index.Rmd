@@ -6,13 +6,44 @@ output:
   html_document: 
     css: D:/Program Files/Typora/resources/style/themes/github.css
 ---
+### 创建向量
+### x = c(a, b, c, d, e, f )
+创建包含指定元素的行向量；
+c() 为数据元素的连接函数；
+```{r}
+x = c(1,2,3,4,5);x
+```
+### x = first : last
+创建从 first 开始，间隔为 1，
+到 last 结束的向量；
+```{r}
+x=1:9;x
+```
+### x = rep ( a，time = k）
+将对象 a 重复 k 次，赋值给x；
+```{r}
+x = rep (1:3,time=3);x
+```
+
+### x = rep ( a，each = k）
+将对象 a 的每个元素重复 k 次，
+然后将结果赋值给对象 x；
+```{r}
+x = rep(1:3,each=3);x
+```
+
+缺省参数名时第二个参数默认为time
+```{r}
+x = rep(1:3,3);x
+```
+
 ### 赋值
 ```{r}
 X=0
 ```
 ### 循环语句
 ```{r}
- for(k in 1:10)
+for(k in 1:10)
    {X[k]=k^2+1; print(X);}
 ```
 ```{r}
@@ -39,6 +70,12 @@ x=0:10;
 y=dbinom(x,10,0.5); 
 print(cbind(x,y))
 ```
+### x = runif (k, a, b)
+生成 k 个以(a, b) 为参数的服从均匀分布的随机数。
+```{r}
+x = runif (10, 1, 5);x
+```
+
 ### rnorm(n,a,b)
 生成n个正态随机数，均值为a，标准差为b
 ```{r}
@@ -90,8 +127,18 @@ barplot(Frequence,xlab="Groups",ylab="Frequence",main="BarPlot")
 
 ### hist
 hist画条形图，只给一个参数时，默认是频数分布表
+hist(vector,breaks=,freq=)
+breaks值为数字，数字越大条形图分得越细，可缺省
+freq=F意为概率密度分布
+
+### density(x)
+返回x的密度
 ```{r}
 hist(SampleX)
+hist(SampleX,20)
+hist(SampleX,10)
+hist(SampleX,20,freq=F)
+lines(density((SampleX)))
 ```
 
 ### matplot绘图
@@ -124,11 +171,18 @@ YZ_Min = apply(Data,1,min)
 
 ### plot画图
 ### sort排序
+decreasing为TRUE，表示降序
+decreasing为FALSE，表示升序
 ```{r}
 plot(sort(YZ_Min));
 plot(X,YZ_Min);
 lines(X,YZ_Min)
 ```
+```{r}
+test=1:9;
+sort(test,decreasing = TRUE);
+```
+
 
 ### combn(x,m)
 组合数。
@@ -223,7 +277,15 @@ Data= cbind(Norm_0_1,Norm_0_2,Norm_1_2,Trans_1_2,Trans_10_2,Trans_1_5);
 boxplot(Data)
 ```
 
-<font color=red size=5>**自定义函数不明白???????**</font>
+### 自定义函数
+函数名 <- function(参数){
+  return()}
+```{r}
+Statistic_T <- function(a){
+    X = a+1; 
+    return(X)}
+Statistic_T(3)
+```
 ```{r warning=FALSE}
 Statistic_T <- function(Number_Sample){
     X = rnorm(Number_Sample); 
@@ -236,6 +298,7 @@ for (k in 1:Number_Repeat){
     Vector_T[k]= Statistic_T(Number_Sample)};
 hist(Vector_T,freq=F);
 lines(density(Vector_T))
+
 
 ```
 
@@ -251,35 +314,170 @@ vector(length=20)
 as.numeric(vector(length=20))
 ```
 
+
 ```{r}
-Statistic_T <- function(Number_Sample){
-    X = rnorm(Number_Sample); 
-    S_T = (X-mean(X))/sd(X);
-    return(S_T)}
-Statistic_T(3)
+Statistic_F <- function(Number_Sample){
+    X1 = rnorm(Number_Sample); 
+    X2 = rnorm(Number_Sample);
+    S_F = sd(X1)/sd(X2);
+    return(S_F)}
+
+Number_Sample = 10;
+Number_Repeat = 200;
+Vector_F = as.numeric(vector(length=Number_Repeat))
+for (k in 1:Number_Repeat) {Vector_F[k]= Statistic_F(Number_Sample)};
+hist(Vector_F,20,freq=F)
+lines(density(Vector_F))
+```
+### pnorm(x)
+返回值是正态分布的分布函数值，比如pnorm（z）等价于P(x≤z)；
+pnorm(x, mean = a, sd = b, lower.tail = FALSE)
+求P(x≤), 那么lower.tail 是TRUE， P(x≥) lower.tail是False
+```{r}
+Random_Normal = rnorm(100);
+FX_Normal = pnorm(Random_Normal);
+plot(sort(FX_Normal))
+FX_Uniform = punif(Random_Normal);
+plot(sort(FX_Uniform))
+```
+### colMeans(X)求列平均
+### qnorm 返回值是给定概率p后的下分位点，是pnorm的反函数
+```{r}
+n=100; p=0.3;
+x=rbinom(100,1,0.3);
+m=sum(x);
+freq = m/n;
+err = abs(freq-p);
+print(err);  
+
+X = matrix(rnorm(10000,1,1),100,100);
+EX = colMeans(X);
+EX;
+err = EX-1;
+boxplot(err);      
+ 
+X = matrix(rnorm(10000,1,1),100,100);
+PX = apply(X,2,quantile,0.3);
+Pu = qnorm(0.3,1,1);
+err = PX - Pu;
+boxplot(err)
+```
+```{r}
+x1 = qnorm(0.05);   x2 = qnorm(0.95);
+print(c(x1,x2));
+y1 = qnorm(0.025);  y2 = qnorm(0.975);
+print(c(y1,y2))
+```
+
+### quantile计算百分位数
+quantile(x,p)
+计算公式：$(x_n-x_1)*p+x_1$
+```{r}
+x=1:11;
+quantile(x,0.1)
+```
+
+### rt(n,df)
+T分布
+```{r}
+x=rnorm(100);
+y=rt(100,10);
+Data=cbind(x,y);
+boxplot(Data)  
+```
+
+### median(x)中位数
+```{r}
+X = matrix(rnorm(10000),100,100);
+ EX = colMeans(X);         
+ EX = apply(X,2,mean);     
+ MX = apply(X,2,median);   
+ Data = cbind(EX,MX);      
+ boxplot(Data)
+```
+
+```{r}
+N=200;n=30;   
+X = matrix(rnorm(N*n,1,sd=3),n,N);
+EX = colMeans(X);
+SX = apply(X,2,sd);
+UX = (EX - 1)/(3/sqrt(n));
+TX = (EX - 1)/(SX/sqrt(n));
+Data = cbind(UX,TX);
+boxplot(Data)
 ```
 
 
+```{r}
+X = rbinom(100,10,0.4);
+Eu = 10 * 0.4;
+Du = 100* 0.4 * (1-0.4);
+UX = (X - Eu)/(sqrt(Du));
+Data = cbind(X,UX);
+boxplot(Data)
+```
 
+```{r}
+Vector_Standard = as.numeric(vector(length = 1000));
+for (k in 1:1000){
+    Number_Sample = 500;
+    Parameter_P = 0.8;
+    SampleX =rbinom(Number_Sample,1,Parameter_P);
+    Estimator_P = mean(SampleX);
+    Delta = sqrt(Estimator_P*(1-Estimator_P)/Number_Sample);
+    Value_Standard = (Estimator_P-Parameter_P)/Delta;
+    Vector_Standard[k]= Value_Standard;}
+hist(Vector_Standard);
+```
 
+```{r}
+X = matrix(rnorm(1000),100,10);
+Y = matrix(nrow=100,ncol=10);
+for(k in 1:10){Y[,k]=rnorm(100)};
+boxplot(cbind(X,Y))
+```
 
+```{r}
+X = matrix(rnorm(1000),100,10);
+Z = rnorm(120);
+Y = matrix(nrow=100,ncol=10);
+for(k in 1:10){Y[,k]=sample(Z,100,replace=TRUE)};
+boxplot(cbind(X,Y))
+```
 
+```{r}
+X = sort(rnorm(100));
+n = 1:100;
+Y = (n+0.5)/(100+1);
+Z = pnorm(X);
+Data = cbind(Y,Z);
+matplot(X,Data,pch = 16)
+```
 
+```{r}
+u = seq(from=0,to=1,length.out=50); 
+T = matrix(nrow = 50,ncol=100) 
+for (k in 1:50){ 
+  X = matrix(rnorm(10000),100,100);
+  MX = colMeans(X);
+  U =(MX - u[k])/(1/sqrt(100)); 
+  T[k,] = U;}
+boxplot(t(T))
+```
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+### 一元线性回归
+### lm_data = lm(y~x)
+线性拟合x和y，把数据赋给lm_data
+### summary(lm_data)
+给出过程表
+### abline(lm_data)
+在图上加入拟合的直线（需要先画出散点图）
+```{r}
+ a = 0.8; b = 1.0;
+ X = 1.2*runif(1000); e = 5*rnorm(1000); Y = a*X+b+e;
+ S_Reg = lm(Y~X); summary(S_Reg);
+ plot(X,Y); abline(S_Reg)
+```
 
 
 
