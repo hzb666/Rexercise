@@ -279,6 +279,7 @@ boxplot(Data)
 
 ### 自定义函数
 函数名 <- function(参数){
+  
   return()}
 ```{r}
 Statistic_T <- function(a){
@@ -340,7 +341,9 @@ plot(sort(FX_Normal))
 FX_Uniform = punif(Random_Normal);
 plot(sort(FX_Uniform))
 ```
+
 ### colMeans(X)求列平均
+
 ### qnorm 返回值是给定概率p后的下分位点，是pnorm的反函数
 ```{r}
 n=100; p=0.3;
@@ -352,7 +355,6 @@ print(err);
 
 X = matrix(rnorm(10000,1,1),100,100);
 EX = colMeans(X);
-EX;
 err = EX-1;
 boxplot(err);      
  
@@ -377,8 +379,7 @@ x=1:11;
 quantile(x,0.1)
 ```
 
-### rt(n,df)
-T分布
+### rt(n,df)求T分布
 ```{r}
 x=rnorm(100);
 y=rt(100,10);
@@ -466,10 +467,13 @@ boxplot(t(T))
 ```
 
 ### 一元线性回归
+
 ### lm_data = lm(y~x)
 线性拟合x和y，把数据赋给lm_data
+
 ### summary(lm_data)
 给出过程表
+
 ### abline(lm_data)
 在图上加入拟合的直线（需要先画出散点图）
 ```{r}
