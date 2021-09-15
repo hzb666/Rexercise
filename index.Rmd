@@ -347,6 +347,7 @@ for (k in 1:Number_Repeat) {Vector_F[k]= Statistic_F(Number_Sample)};
 hist(Vector_F,20,freq=F)
 lines(density(Vector_F))
 ```
+
 ### pnorm(x)
 返回值是正态分布的分布函数值，比如pnorm（z）等价于P(x≤z)；
 pnorm(x, mean = a, sd = b, lower.tail = FALSE)
